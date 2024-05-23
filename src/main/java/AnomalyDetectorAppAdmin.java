@@ -2,10 +2,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.Model;
-import org.apache.spark.ml.clustering.BisectingKMeans;
-import org.apache.spark.ml.clustering.BisectingKMeansModel;
-import org.apache.spark.ml.clustering.KMeans;
-import org.apache.spark.ml.clustering.KMeansModel;
+import org.apache.spark.ml.clustering.*;
 import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.ml.feature.StandardScaler;
 import org.apache.spark.ml.feature.StringIndexer;
@@ -33,7 +30,7 @@ import static org.apache.spark.sql.functions.col;
 
 public class AnomalyDetectorAppAdmin {
     public static void main(String[] args) {
-        //Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
+        Logger.getLogger("org.apache.spark").setLevel(Level.ERROR);
 
         // Создание SparkSession
         SparkSession spark = SparkSession.builder()
@@ -49,7 +46,7 @@ public class AnomalyDetectorAppAdmin {
         String kafkaBrokers = "localhost:9092"; // или можно заменить на ввод с GUI (для Kafka)
         String kafkaTopic = "anomalies"; // или можно заменить на ввод с GUI (для Kafka)
         String algorithm = "kMeans"; // Можно выбрать "kMeans" или "bisectingKMeans" через GUI
-        String anomalyMetric = "Manhattan"; // Можно выбрать "Euclidean", "Manhattan" или другие метрики через GUI
+        String anomalyMetric = "Euclidean"; // Можно выбрать "Euclidean", "Manhattan" или другие метрики через GUI
         String[] selectedFeatures = new String[]{"Genre", "Age", "AnnualIncome", "SpendingScore"}; // Получение этих значений из GUI
 
         // Выбор источника данных
@@ -365,7 +362,7 @@ class AnomalyDetector<T extends Model<? extends T>> implements Serializable {
         double stdDevDistance = stats.getStandardDeviation();
 
         // Установка порога аномалии (например, среднее + 2 стандартных отклонения)
-        double anomalyThreshold = meanDistance + 3 * stdDevDistance;
+        double anomalyThreshold = meanDistance + 4 * stdDevDistance;
 
         // Обнаружение аномалий
         for (int i = 0; i < indexedDataList.size(); i++) {
@@ -609,6 +606,7 @@ class KMeansClusterizer implements Clusterizer<KMeansModel> {
                 .setFeaturesCol("features")
                 .setPredictionCol("prediction");
 
+
         KMeansModel model = kmeans.fit(featureData);
 
         // Вывод результатов кластеризации
@@ -639,6 +637,7 @@ class KMeansClusterizer implements Clusterizer<KMeansModel> {
                     .setSeed(1L)
                     .setFeaturesCol("features")
                     .setPredictionCol("cluster");
+
 
             KMeansModel model = kmeans.fit(featureData);
 

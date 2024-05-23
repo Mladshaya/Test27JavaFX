@@ -101,7 +101,7 @@ public class AnomalyDetectorAppAdminGUI extends Application {
         fileLoadingStatusLabel = new Label();
         fileLoadingStatusLabel.setStyle("-fx-font-size: 12;");
 
-        Label featuresLabel = new Label("Признаки:");
+        Label featuresLabel = new Label("Выберите значимые признаки:");
         featuresLabel.setStyle("-fx-font-size: 14;");
         featuresComboBox = new CheckComboBox<>();
         featuresComboBox.setStyle("-fx-font-size: 12;");
@@ -268,13 +268,16 @@ public class AnomalyDetectorAppAdminGUI extends Application {
         bottomVBox.setPadding(new Insets(30));
         bottomVBox.setSpacing(10);
         bottomVBox.getChildren().addAll(
-                selectTestFileLabel, testFilePathField, selectTestFileButton,
+                selectTestFileLabel,
+                testFilePathField,
+                selectTestFileButton,
                 new Label(""),
                 anomalyMetricLabel, anomalyMetricComboBox,
                 new Label(""),
                 resultOutputTypeLabel, resultOutputTypeComboBox,
                 new Label(""),
-                resultFilePathLabel, resultFilePathField, selectResultFileButton,
+                resultFilePathLabel, resultFilePathField,
+                selectResultFileButton,
                 new Label(""),
                 kafkaSettingsLabel, kafkaBrokersField, kafkaTopicField,
                 new Label(""),
@@ -481,7 +484,7 @@ public class AnomalyDetectorAppAdminGUI extends Application {
         selectedAlgorithm = null;
         selectedAnomalyMetric = null;
         selectedTrainFile = null;
-        selectedTestFile = null;
+        //selectedTestFile = null;
         selectedFeatures = null;
         featureNames = null;
         clusteringModel = null;
